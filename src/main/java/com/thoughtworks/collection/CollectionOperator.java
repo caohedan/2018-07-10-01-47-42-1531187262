@@ -3,6 +3,7 @@ package com.thoughtworks.collection;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,16 +23,22 @@ public class CollectionOperator {
 
     public List<Integer> getEvenListByIntervals(int left, int right) {
         List<Integer> list = getNumToArray(left,right);
-        return (List<Integer>) list.stream()
-                .filter(x-> x%2 == 0);
+        list=  list.stream()
+                .filter(x-> x%2 == 0)
+                .collect(Collectors.toList());
+        if(right<left)
+            Collections.reverse(list);
+        return list;
     }
 
     public List<Integer> popEvenElments(int[] array) {
-        throw new NotImplementedException();
+        List<Integer> list1 = Arrays.stream( array ).boxed().collect(Collectors.toList());
+        return  list1.stream().filter(x->x %2 ==0).collect(Collectors.toList());
+
     }
 
     public int popLastElment(int[] array) {
-        throw new NotImplementedException();
+        return array[array.length-1];
     }
 
     public List<Integer> popCommonElement(int[] firstArray, int[] secondArray) {
@@ -42,7 +49,12 @@ public class CollectionOperator {
     }
 
     public List<Integer> addUncommonElement(Integer[] firstArray, Integer[] secondArray) {
-        throw new NotImplementedException();
+        List <Integer>list2 = Arrays.stream(secondArray).collect(Collectors.toList());
+        List <Integer>list1 = Arrays.stream(firstArray).collect(Collectors.toList());
+        List<Integer> list=list2.stream().filter(t->!list1
+                .contains(t)).collect(Collectors.toList());
+        list1.addAll(list);
+        return  list1;
     }
     public List<Integer> getNumToArray(int rightBorder,int leftBorder){
         if(rightBorder < leftBorder)
